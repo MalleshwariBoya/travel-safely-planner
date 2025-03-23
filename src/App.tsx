@@ -12,6 +12,7 @@ import Itinerary from "./pages/Itinerary";
 import Safety from "./pages/Safety";
 import NotFound from "./pages/NotFound";
 
+// Create a client
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
@@ -25,8 +26,6 @@ const ScrollToTop = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
@@ -37,6 +36,8 @@ const App = () => (
           <Route path="/safety" element={<Safety />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Toaster />
+        <Sonner />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

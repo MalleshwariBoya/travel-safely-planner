@@ -7,7 +7,8 @@ import {
   Calendar, 
   Shield,
   ArrowRight,
-  Check 
+  Check,
+  MapPin 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
