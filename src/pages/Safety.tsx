@@ -1,12 +1,10 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/home/Hero";
-import { Features } from "@/components/home/Features";
-import { BudgetPlanner } from "@/components/planner/BudgetPlanner";
+import { EmergencyAssistance } from "@/components/safety/EmergencyAssistance";
 import { useEffect } from "react";
 
-const Index = () => {
+const Safety = () => {
   useEffect(() => {
     // Smooth scroll animation for the entire page
     const observer = new IntersectionObserver((entries) => {
@@ -36,15 +34,9 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       
-      <main className="flex-grow pt-16">
-        <Hero />
-        
+      <main className="flex-grow pt-24">
         <div className="animate-on-scroll opacity-0">
-          <Features />
-        </div>
-        
-        <div className="animate-on-scroll opacity-0">
-          <BudgetPlanner />
+          <EmergencyAssistance />
         </div>
       </main>
       
@@ -53,4 +45,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Safety;
