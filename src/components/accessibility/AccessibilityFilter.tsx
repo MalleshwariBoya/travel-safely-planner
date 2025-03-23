@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAccessibility } from "@/context/AccessibilityContext";
-import { AlertTriangle, Filter, Wheelchair, Volume2, BrainCircuit, Shield, Heart } from "lucide-react";
+import { AlertTriangle, Filter, Accessibility, Volume2, BrainCircuit, Shield, Heart } from "lucide-react";
 
 export function AccessibilityFilter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +76,7 @@ export function AccessibilityFilter() {
                 htmlFor="wheelchair"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
               >
-                <Wheelchair className="h-4 w-4 mr-1 text-blue-600" />
+                <Accessibility className="h-4 w-4 mr-1 text-blue-600" />
                 Wheelchair Accessible
               </label>
               <p className="text-xs text-muted-foreground">
@@ -191,7 +190,7 @@ export function AccessibilityFilter() {
       {(preferences.mobilityFeatures && activeFilterCount > 0) && (
         <div className="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-200 text-sm text-blue-800">
           <p className="flex items-center">
-            <Wheelchair className="h-4 w-4 mr-2" />
+            <Accessibility className="h-4 w-4 mr-2" />
             <span><strong>{activeFilterCount}</strong> accessibility filters applied. Showing only transport options that meet these requirements.</span>
           </p>
         </div>

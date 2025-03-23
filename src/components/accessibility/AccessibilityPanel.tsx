@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Eye, 
@@ -6,7 +5,7 @@ import {
   Contrast, 
   MonitorSmartphone, 
   Volume2, 
-  Wheelchair, 
+  Accessibility,
   X,
   MessageSquareText,
   Settings2,
@@ -132,7 +131,7 @@ export function AccessibilityPanel() {
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Wheelchair className="h-5 w-5 mr-2 text-red-500" />
+                  <Accessibility className="h-5 w-5 mr-2 text-red-500" />
                   <span>Mobility Features</span>
                 </div>
                 <Switch 
@@ -192,7 +191,7 @@ export function AccessibilityPanel() {
             onClick={() => setIsOpen(true)}
             aria-label="Open accessibility options"
           >
-            <Wheelchair className="h-6 w-6" />
+            <Accessibility className="h-6 w-6" />
           </Button>
         )}
       </div>
