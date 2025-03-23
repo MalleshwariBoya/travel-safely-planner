@@ -4,6 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Menu, X, MapPin } from "lucide-react";
+import { SignInModal } from "@/components/auth/SignInModal";
+import { PlanTripModal } from "@/components/trip/PlanTripModal";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -16,6 +18,8 @@ const navItems = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isPlanTripModalOpen, setIsPlanTripModalOpen] = useState(false);
   const location = useLocation();
   
   useEffect(() => {
@@ -76,11 +80,13 @@ export function Navbar() {
           <Button
             variant="outline"
             className="transition-all duration-200 border-travel-blue/20 text-travel-blue hover:bg-travel-blue/5 hover:border-travel-blue/30"
+            onClick={() => setIsSignInModalOpen(true)}
           >
             Sign In
           </Button>
           <Button
             className="bg-travel-blue transition-all duration-200 hover:bg-travel-blue-dark"
+            onClick={() => setIsPlanTripModalOpen(true)}
           >
             Plan Trip
           </Button>
@@ -129,17 +135,36 @@ export function Navbar() {
             <Button
               variant="outline"
               className="w-full border-travel-blue/20 text-travel-blue hover:bg-travel-blue/5"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsSignInModalOpen(true);
+              }}
             >
               Sign In
             </Button>
             <Button
               className="w-full bg-travel-blue hover:bg-travel-blue-dark"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsPlanTripModalOpen(true);
+              }}
             >
               Plan Trip
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <SignInModal 
+        isOpen={isSignInModalOpen} 
+        onClose={() => setIsSignInModalOpen(false)} 
+      />
+      
+      <PlanTripModal 
+        isOpen={isPlanTripModalOpen} 
+        onClose={() => setIsPlanTripModalOpen(false)} 
+      />
     </header>
   );
 }

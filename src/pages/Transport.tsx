@@ -8,13 +8,27 @@ import { AccessibilityFilter } from "@/components/accessibility/AccessibilityFil
 import { EmergencySOS } from "@/components/safety/EmergencySOS";
 import { useAccessibility } from "@/context/AccessibilityContext";
 import { useVoiceAssistant } from "@/hooks/useVoiceAssistant";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "@/hooks/use-toast";
+import { Info } from "lucide-react";
 
 const Transport = () => {
   const { preferences } = useAccessibility();
   const { speak } = useVoiceAssistant();
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
+    // Show welcome toast
+    setTimeout(() => {
+      toast({
+        title: "Transport Options Loaded",
+        description: "Find and book accessible transportation here",
+        duration: 5000,
+      });
+      setIsLoading(false);
+    }, 1000);
+    
     // Announce page for screen readers
     if (preferences.screenReader) {
       speak("Transport booking page loaded. Here you can find and book accessible transportation options.");
@@ -51,12 +65,26 @@ const Transport = () => {
       <Navbar />
       
       <main className="flex-grow pt-24">
-        <div className={preferences.reducedMotion ? '' : 'animate-on-scroll opacity-0'}>
-          <div className="content-wrapper">
-            <AccessibilityFilter />
-            <TransportOptions />
+        {isLoading ? (
+          <div className="content-wrapper py-12">
+            <div className="bg-gray-100 animate-pulse rounded-xl h-96"></div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className={preferences.reducedMotion ? '' : 'animate-on-scroll opacity-0'}>
+              <div className="content-wrapper">
+                <Alert className="mb-6 border-blue-200 bg-blue-50">
+                  <AlertDescription className="flex items-center text-blue-800">
+                    <Info className="h-4 w-4 mr-2" />
+                    Here are your transportation options based on your search parameters. Use accessibility filters to customize your results.
+                  </AlertDescription>
+                </Alert>
+                <AccessibilityFilter />
+                <TransportOptions />
+              </div>
+            </div>
+          </>
+        )}
       </main>
       
       <Footer />
