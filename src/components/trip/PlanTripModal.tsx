@@ -5,6 +5,7 @@ import { X, CalendarRange, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { travelService } from "@/services/travelService";
 
 interface PlanTripModalProps {
   isOpen: boolean;
@@ -24,16 +25,20 @@ export function PlanTripModal({ isOpen, onClose }: PlanTripModalProps) {
     e.preventDefault();
     setIsPlanning(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Trip Planned!",
-        description: "Redirecting you to transportation options.",
-      });
+    const success = await travelService.planTrip({
+      from,
+      to,
+      date,
+      travelers: parseInt(travelers, 10),
+    });
+    
+    if (success) {
       setIsPlanning(false);
       onClose();
       navigate("/transport");
-    }, 1500);
+    } else {
+      setIsPlanning(false);
+    }
   };
 
   if (!isOpen) return null;

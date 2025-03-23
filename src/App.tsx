@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { AccessibilityProvider } from "@/context/AccessibilityContext";
+import { AuthProvider } from "@/context/AuthContext";
 import Index from "./pages/Index";
 import Transport from "./pages/Transport";
 import Stays from "./pages/Stays";
@@ -26,23 +27,25 @@ const ScrollToTop = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AccessibilityProvider>
-      <TooltipProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/transport" element={<Transport />} />
-            <Route path="/stays" element={<Stays />} />
-            <Route path="/itinerary" element={<Itinerary />} />
-            <Route path="/safety" element={<Safety />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-          <Sonner />
-        </BrowserRouter>
-      </TooltipProvider>
-    </AccessibilityProvider>
+    <AuthProvider>
+      <AccessibilityProvider>
+        <TooltipProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/transport" element={<Transport />} />
+              <Route path="/stays" element={<Stays />} />
+              <Route path="/itinerary" element={<Itinerary />} />
+              <Route path="/safety" element={<Safety />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+            <Sonner />
+          </BrowserRouter>
+        </TooltipProvider>
+      </AccessibilityProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

@@ -1,9 +1,10 @@
 
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, User, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { authService } from "@/services/authService";
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -13,26 +14,39 @@ interface SignInModalProps {
 export function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSigningIn(true);
+    setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
-      setIsSigningIn(false);
+    const success = await authService.login({ email, password });
+    
+    if (success) {
+      setIsLoading(false);
       onClose();
-    }, 1500);
+    } else {
+      setIsLoading(false);
+    }
   };
-
+  
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const success = await authService.signup({ email, password });
+    
+    if (success) {
+      setIsLoading(false);
+      onClose();
+    } else {
+      setIsLoading(false);
+    }
+  };
+  
   if (!isOpen) return null;
-
+  
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg max-w-md w-full relative animate-fade-in">
@@ -44,74 +58,133 @@ export function SignInModal({ isOpen, onClose }: SignInModalProps) {
         </button>
         
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-center mb-6 text-travel-neutral-900 dark:text-white">Sign In</h2>
+          <h2 className="text-2xl font-bold text-center mb-6 text-travel-neutral-900 dark:text-white">Welcome to TravelSmart</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
-                Email address
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full"
-              />
-            </div>
+          <Tabs defaultValue="signin" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
             
-            <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full"
-              />
-            </div>
+            <TabsContent value="signin">
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-travel-neutral-500" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <label htmlFor="password" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
+                      Password
+                    </label>
+                    <a href="#" className="text-sm text-travel-blue hover:underline">
+                      Forgot password?
+                    </a>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-travel-neutral-500" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                </div>
+                
+                <Button
+                  type="submit"
+                  className="w-full bg-travel-blue hover:bg-travel-blue-dark"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
+            </TabsContent>
             
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-travel-blue focus:ring-travel-blue border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-travel-neutral-700 dark:text-gray-300">
-                  Remember me
-                </label>
-              </div>
-              
-              <div className="text-sm">
-                <a href="#" className="font-medium text-travel-blue hover:text-travel-blue-dark">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            
-            <Button
-              type="submit"
-              className="w-full bg-travel-blue hover:bg-travel-blue-dark"
-              disabled={isSigningIn}
-            >
-              {isSigningIn ? "Signing in..." : "Sign In"}
-            </Button>
-            
-            <div className="mt-4 text-center text-sm">
-              <span className="text-travel-neutral-600 dark:text-gray-400">Don't have an account? </span>
-              <a href="#" className="font-medium text-travel-blue hover:text-travel-blue-dark">
-                Sign Up
-              </a>
-            </div>
-          </form>
+            <TabsContent value="signup">
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-travel-neutral-500" />
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="John Doe"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="signup-email" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-travel-neutral-500" />
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="signup-password" className="block text-sm font-medium text-travel-neutral-700 dark:text-gray-300">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-travel-neutral-500" />
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="pl-10 w-full"
+                    />
+                  </div>
+                </div>
+                
+                <Button
+                  type="submit"
+                  className="w-full bg-travel-blue hover:bg-travel-blue-dark"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating account..." : "Create Account"}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

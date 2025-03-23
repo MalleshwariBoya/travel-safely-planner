@@ -19,12 +19,16 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Add a new accessibility-focused variant
+        accessible: "bg-green-600 text-white hover:bg-green-700 text-base font-semibold py-3 px-6 tracking-wide"
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        // Add sizes that work well for accessibility
+        xl: "h-12 rounded-md px-10 text-lg",
       },
     },
     defaultVariants: {
@@ -42,11 +46,34 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
+    // Add button press effect state
+    const [isPressed, setIsPressed] = React.useState(false);
+    
+    const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setIsPressed(true);
+      if (props.onMouseDown) {
+        props.onMouseDown(e);
+      }
+    };
+    
+    const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setIsPressed(false);
+      if (props.onMouseUp) {
+        props.onMouseUp(e);
+      }
+    };
+    
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          isPressed ? "scale-95 shadow-inner" : "transform-none"
+        )}
         ref={ref}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={() => setIsPressed(false)}
         {...props}
       />
     )

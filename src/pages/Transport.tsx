@@ -12,13 +12,21 @@ import { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 import { Info } from "lucide-react";
+import { travelService } from "@/services/travelService";
 
 const Transport = () => {
   const { preferences } = useAccessibility();
   const { speak } = useVoiceAssistant();
   const [isLoading, setIsLoading] = useState(true);
+  const [tripData, setTripData] = useState<any>(null);
   
   useEffect(() => {
+    // Get trip data from localStorage
+    const storedTripData = localStorage.getItem("currentTrip");
+    if (storedTripData) {
+      setTripData(JSON.parse(storedTripData));
+    }
+    
     // Show welcome toast
     setTimeout(() => {
       toast({
@@ -76,7 +84,11 @@ const Transport = () => {
                 <Alert className="mb-6 border-blue-200 bg-blue-50">
                   <AlertDescription className="flex items-center text-blue-800">
                     <Info className="h-4 w-4 mr-2" />
-                    Here are your transportation options based on your search parameters. Use accessibility filters to customize your results.
+                    {tripData ? (
+                      <>Showing transportation options from <strong>{tripData.from}</strong> to <strong>{tripData.to}</strong> on <strong>{tripData.date}</strong> for <strong>{tripData.travelers}</strong> traveler(s).</>
+                    ) : (
+                      <>Here are your transportation options based on your search parameters. Use accessibility filters to customize your results.</>
+                    )}
                   </AlertDescription>
                 </Alert>
                 <AccessibilityFilter />
